@@ -16,8 +16,14 @@ class ReceiptService {
     CashPayment? payment,
     Client? client,
     String? storeName,
+    Map<String, String>? productNames,
   }) async {
     final doc = pw.Document();
+
+    String nameOf(OrderItem item) =>
+        (productNames != null && productNames[item.productId]?.isNotEmpty == true)
+            ? productNames[item.productId]!
+            : item.productId;
 
     doc.addPage(
       pw.MultiPage(
@@ -27,10 +33,7 @@ class ReceiptService {
           pw.Center(
             child: pw.Text(
               storeName ?? 'Grocery Store',
-              style: pw.TextStyle(
-                fontSize: 16,
-                fontWeight: pw.FontWeight.bold,
-              ),
+              style: const pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold),
             ),
           ),
           pw.SizedBox(height: 6),
@@ -38,7 +41,8 @@ class ReceiptService {
             child: pw.Text('Cash Receipt', style: const pw.TextStyle(fontSize: 12)),
           ),
           pw.Divider(),
-          _row('Order #', order.orderId.substring(0, order.orderId.length > 10 ? 10 : order.orderId.length)),
+          _row('Order #',
+              order.orderId.substring(0, order.orderId.length > 10 ? 10 : order.orderId.length)),
           _row('Date', _formatDate(order.createdAt)),
           _row('Cashier', salesperson.name),
           if (client != null) _row('Customer', client.name),
@@ -50,8 +54,8 @@ class ReceiptService {
                   children: [
                     pw.Text(
                       item.quantity == 1
-                          ? item.productId
-                          : '${item.quantity} x ${item.productId}',
+                          ? nameOf(item)
+                          : '${item.quantity} x ${nameOf(item)}',
                       style: const pw.TextStyle(fontSize: 11),
                     ),
                     pw.Text(
@@ -71,11 +75,7 @@ class ReceiptService {
           pw.Divider(),
           _row('Subtotal', CameroonConfig.formatCurrency(order.subtotal)),
           _row('VAT (19.25%)', CameroonConfig.formatCurrency(order.vatAmount)),
-          _row(
-            'TOTAL',
-            CameroonConfig.formatCurrency(order.totalAmount),
-            bold: true,
-          ),
+          _row('TOTAL', CameroonConfig.formatCurrency(order.totalAmount), bold: true),
           pw.SizedBox(height: 6),
           if (payment != null) ...[
             _row('Cash received', CameroonConfig.formatCurrency(payment.amountTendered)),

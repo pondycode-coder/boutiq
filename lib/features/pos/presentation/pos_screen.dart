@@ -159,6 +159,9 @@ class _PosScreenState extends ConsumerState<PosScreen> {
       }
       _showMessage(message);
       if (!mounted) return;
+      final productNames = {
+        for (final c in cart) c.product.productId: c.product.name,
+      };
       await showReceiptDialog(
         context,
         order: order,
@@ -166,6 +169,7 @@ class _PosScreenState extends ConsumerState<PosScreen> {
         salesperson: user,
         payment: orderNotifier.paymentForOrder(order.orderId),
         client: client,
+        productNames: productNames,
       );
     }
   }

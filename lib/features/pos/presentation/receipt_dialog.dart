@@ -16,6 +16,7 @@ Future<void> showReceiptDialog(
   required User salesperson,
   CashPayment? payment,
   Client? client,
+  Map<String, String>? productNames,
 }) {
   return showDialog<void>(
     context: context,
@@ -25,6 +26,7 @@ Future<void> showReceiptDialog(
       salesperson: salesperson,
       payment: payment,
       client: client,
+      productNames: productNames,
     ),
   );
 }
@@ -36,6 +38,7 @@ class _ReceiptDialog extends StatefulWidget {
     required this.salesperson,
     this.payment,
     this.client,
+    this.productNames,
   });
 
   final Order order;
@@ -43,28 +46,32 @@ class _ReceiptDialog extends StatefulWidget {
   final User salesperson;
   final CashPayment? payment;
   final Client? client;
+  final Map<String, String>? productNames;
 
   @override
   State<_ReceiptDialog> createState() => _ReceiptDialogState();
 }
 
 class _ReceiptDialogState extends State<_ReceiptDialog> {
-  Future<Uint8List> _build(PdfPageFormat format) async {
-    return ReceiptService.buildReceiptPdf(
-      order: widget.order,
-      items: widget.items,
-      salesperson: widget.salesperson,
-      payment: widget.payment,
-      client: widget.client,
-    );
-  }
+  // Build the PDF once and reuse the exact same bytes for preview + print/share.
+  late final Future<Uint8List> _pdfFuture = ReceiptService.buildReceiptPdf(
+    order: widget.order,
+    items: widget.items,
+    salesperson: widget.salesperson,
+    payment: widget.payment,
+    client: widget.client,
+    productNames: widget.productNames,
+  );
 
   Future<void> _print() async {
-    await Printing.layoutPdf(onLayout: _build);
+    // Printing.layoutPdf renders the real PDF via the platform print service,
+    // independent of the preview rasterization.
+    final bytes = await _pdfFuture;
+    await Printing.layoutPdf(onLayout: (_) => Future.value(bytes));
   }
 
   Future<void> _share() async {
-    final bytes = await _build(PdfPageFormat.roll80);
+    final bytes = await _pdfFuture;
     await Printing.sharePdf(bytes: bytes, filename: 'receipt.pdf');
   }
 
@@ -79,7 +86,7 @@ class _ReceiptDialogState extends State<_ReceiptDialog> {
           canChangeOrientation: false,
           canChangePageFormat: false,
           canDebug: false,
-          build: _build,
+          build: (_) => _pdfFuture,
         ),
       ),
       actions: [
