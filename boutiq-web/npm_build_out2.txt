@@ -1,0 +1,38 @@
+
+> boutiq-web@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.15
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/12) ...
+   Generating static pages (3/12) 
+   Generating static pages (6/12) 
+   Generating static pages (9/12) 
+ ✓ Generating static pages (12/12)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    146 B          87.3 kB
+├ ○ /_not-found                          873 B          88.1 kB
+├ ○ /clients                             146 B          87.3 kB
+├ ○ /dashboard                           2.4 kB          153 kB
+├ ○ /login                               1.69 kB         152 kB
+├ ○ /orders                              2.12 kB         153 kB
+├ ○ /pos                                 3.09 kB         154 kB
+├ ○ /products                            2.49 kB         153 kB
+├ ○ /settings                            631 B          87.8 kB
+└ ○ /staff                               146 B          87.3 kB
++ First Load JS shared by all            87.2 kB
+  ├ chunks/117-78e2c40ea830ff81.js       31.6 kB
+  ├ chunks/fd9d1056-d2e18b0981af8b00.js  53.6 kB
+  └ other shared chunks (total)          1.95 kB
+
+
+○  (Static)  prerendered as static content
+
