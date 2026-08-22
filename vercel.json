@@ -1,5 +1,5 @@
 {
-  "buildCommand": "flutter build web --release --web-renderer canvaskit --dart-define=SUPABASE_URL=https://excyvfjcnddczxshwdks.supabase.co --dart-define=SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4Y3l2ZmpjbmRkY3p4c2h3ZGtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxODc4MzAsImV4cCI6MjEwMjc2MzgzMH0.RbUYKmihjCdPlykEw_C1KYM6XS7ahsJKOkGPsNOJRcc",
+  "buildCommand": "flutter build web --release --dart-define=SUPABASE_URL=$SUPABASE_URL --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY",
   "outputDirectory": "build/web",
   "framework": "other",
   "cleanUrls": true,
