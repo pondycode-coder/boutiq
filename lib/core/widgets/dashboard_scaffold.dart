@@ -20,6 +20,7 @@ class _DashboardScaffoldState extends ConsumerState<DashboardScaffold>
     with SingleTickerProviderStateMixin {
   late final AnimationController _railAnimationController;
   late final Animation<double> _railWidthAnimation;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -48,6 +49,10 @@ class _DashboardScaffoldState extends ConsumerState<DashboardScaffold>
       index,
       initialLocation: index == widget.navigationShell.currentIndex,
     );
+    // Close drawer on mobile after selection
+    if (context.isMobile && _scaffoldKey.currentState?.isDrawerOpen == true) {
+      _scaffoldKey.currentState?.closeDrawer();
+    }
   }
 
   Future<void> _logout() async {
@@ -82,15 +87,26 @@ class _DashboardScaffoldState extends ConsumerState<DashboardScaffold>
         label: 'Products',
       ),
       const NavigationDestination(
+        icon: Icon(Icons.bar_chart_outlined),
+        selectedIcon: Icon(Icons.bar_chart),
+        label: 'Reports',
+      ),
+      const NavigationDestination(
+        icon: Icon(Icons.admin_panel_settings_outlined),
+        selectedIcon: Icon(Icons.admin_panel_settings),
+        label: 'Admin',
+      ),
+      const NavigationDestination(
         icon: Icon(Icons.settings_outlined),
         selectedIcon: Icon(Icons.settings),
         label: 'Settings',
       ),
     ];
 
-    Widget trailing = const SizedBox.shrink();
+    // Desktop trailing (expand/collapse + logout)
+    Widget desktopTrailing = const SizedBox.shrink();
     if (!isMobile) {
-      trailing = Expanded(
+      desktopTrailing = Expanded(
         child: Align(
           alignment: Alignment.bottomCenter,
           child: Column(
@@ -125,56 +141,117 @@ class _DashboardScaffoldState extends ConsumerState<DashboardScaffold>
           ),
         ),
       );
-    } else {
-      trailing = PopupMenuButton<String>(
-        onSelected: (value) {
-          if (value == 'logout') _logout();
+    }
+
+    // Mobile drawer (toggleable nav rail)
+    Widget? mobileDrawer;
+    if (isMobile) {
+      mobileDrawer = NavigationDrawer(
+        selectedIndex: widget.navigationShell.currentIndex,
+        onDestinationSelected: (index) {
+          _goBranch(index);
         },
-        itemBuilder: (context) => [
-          const PopupMenuItem(
-            value: 'logout',
-            child: Row(
+        children: [
+          const DrawerHeader(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF1B3A5C), Color(0xFF0D1B2A)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Icon(Icons.logout, size: 20),
-                SizedBox(width: 12),
-                Text('Logout'),
+                Text(
+                  'Boutiq Admin',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Navigation',
+                  style: TextStyle(color: Colors.white70, fontSize: 12),
+                ),
               ],
             ),
           ),
-        ],
-        child: Padding(
-          padding: const EdgeInsets.only(right: DesignTokens.spacingMd),
-          child: CircleAvatar(
-            radius: 16,
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            child: Text(
-              user?.name.characters.first ?? '?',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+          ...destinations.map((d) => NavigationDrawerDestination(
+                icon: d.icon,
+                selectedIcon: d.selectedIcon,
+                label: Text(d.label),
+              )),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Logout'),
+            onTap: _logout,
           ),
-        ),
+        ],
+      );
+    }
+
+    // Mobile: leading menu button to open drawer
+    Widget? mobileLeading;
+    if (isMobile) {
+      mobileLeading = IconButton(
+        icon: const Icon(Icons.menu),
+        onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+        tooltip: 'Open menu',
       );
     }
 
     if (isMobile) {
       return Scaffold(
+        key: _scaffoldKey,
+        drawer: mobileDrawer,
         appBar: AppBar(
+          leading: mobileLeading,
           title: Text(_getCurrentTitle(widget.navigationShell.currentIndex)),
-          actions: [trailing],
+          actions: [
+            PopupMenuButton<String>(
+              onSelected: (value) {
+                if (value == 'logout') _logout();
+              },
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: 'logout',
+                  child: Row(
+                    children: [
+                      Icon(Icons.logout, size: 20),
+                      SizedBox(width: 12),
+                      Text('Logout'),
+                    ],
+                  ),
+                ),
+              ],
+              child: Padding(
+                padding: const EdgeInsets.only(right: DesignTokens.spacingMd),
+                child: CircleAvatar(
+                  radius: 16,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  child: Text(
+                    user?.name.characters.first ?? '?',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
         body: widget.navigationShell,
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: widget.navigationShell.currentIndex,
-          onDestinationSelected: _goBranch,
-          destinations: destinations,
-        ),
       );
     }
 
+    // Desktop: NavigationRail with animated expand/collapse
     return Scaffold(
       body: Row(
         children: [
@@ -197,7 +274,7 @@ class _DashboardScaffoldState extends ConsumerState<DashboardScaffold>
                             label: Text(d.label),
                           ))
                       .toList(),
-                  trailing: trailing,
+                  trailing: desktopTrailing,
                 ),
               );
             },
@@ -215,6 +292,8 @@ class _DashboardScaffoldState extends ConsumerState<DashboardScaffold>
       'Orders',
       'Overview',
       'Products',
+      'Reports',
+      'Admin',
       'Settings',
     ];
     if (index < titles.length) return titles[index];

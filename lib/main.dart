@@ -13,6 +13,7 @@ import 'features/pos/presentation/pos_shell.dart';
 import 'features/pos/presentation/pos_screen.dart';
 import 'features/orders/presentation/order_list_screen.dart';
 import 'features/reports/presentation/reports_screen.dart';
+import 'features/admin/presentation/admin_screen.dart';
 import 'features/dashboard/presentation/overview_screen.dart';
 import 'features/dashboard/presentation/products_screen.dart';
 import 'features/dashboard/presentation/staff_screen.dart';
@@ -101,7 +102,7 @@ final _router = GoRouter(
         ),
       ],
     ),
-    // Admin dashboard shell (POS, Orders, Overview, Products, Settings)
+    // Admin dashboard shell (POS, Orders, Overview, Products, Reports, Admin, Settings)
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) =>
           DashboardScaffold(navigationShell: navigationShell),
@@ -132,6 +133,22 @@ final _router = GoRouter(
             GoRoute(
               path: '/dashboard/products',
               builder: (context, state) => const ProductsScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/dashboard/reports',
+              builder: (context, state) => const ReportsScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/dashboard/admin',
+              builder: (context, state) => const AdminScreen(),
             ),
           ],
         ),
