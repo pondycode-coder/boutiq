@@ -251,6 +251,130 @@ class AppLocalizations {
   String get ordersToday => locale.languageCode == 'fr' ? 'Commandes aujourd\'hui' : 'Orders Today';
   String get cashCollected => locale.languageCode == 'fr' ? 'Espèces encaissées' : 'Cash Collected';
   String get bySalesperson => locale.languageCode == 'fr' ? 'Par vendeur' : 'By salesperson';
+
+  // Receipt
+  String get receipt => locale.languageCode == 'fr' ? 'Reçu' : 'Receipt';
+  String get close => locale.languageCode == 'fr' ? 'Fermer' : 'Close';
+  String get share => locale.languageCode == 'fr' ? 'Partager' : 'Share';
+  String get printLabel => locale.languageCode == 'fr' ? 'Imprimer' : 'Print';
+  String get thankYouPurchase => locale.languageCode == 'fr' ? 'Merci pour votre achat !' : 'Thank you for your purchase!';
+  String get paid => locale.languageCode == 'fr' ? 'PAYÉ' : 'PAID';
+
+  // Login
+  String get invalidPin => locale.languageCode == 'fr' ? 'Code PIN invalide' : 'Invalid PIN';
+  String get cashRegisterLogin => locale.languageCode == 'fr' ? 'Connexion Caisse' : 'Cash Register Login';
+  String get firstRunPin => locale.languageCode == 'fr' ? 'PIN par défaut : 1234 (admin)\nChangez-le dans Admin > Personnel.' : 'First-run default PIN: 1234 (admin)\nChange it in Admin > Staff.';
+
+  // POS
+  String get paymentMethodLabel => locale.languageCode == 'fr' ? 'Mode de paiement' : 'Payment Method';
+  String get totalDueLabel => locale.languageCode == 'fr' ? 'Total dû' : 'Total due';
+  String get amountReceivedFcfa => locale.languageCode == 'fr' ? 'Montant reçu (FCFA)' : 'Amount received (FCFA)';
+  String get payLaterCredit => locale.languageCode == 'fr' ? 'Payer plus tard (Crédit)' : 'Pay Later (Credit)';
+  String get recordAsCredit => locale.languageCode == 'fr' ? 'Enregistrer comme crédit client' : 'Record as credit for client';
+  String get selectClientCredit => locale.languageCode == 'fr' ? 'Sélectionnez un client pour la vente à crédit' : 'Select a client for credit sale';
+  String get orderCompletedChange => locale.languageCode == 'fr' ? 'Commande terminée. Monnaie :' : 'Order completed. Change:';
+  String get noClientsAdd => locale.languageCode == 'fr' ? 'Aucun client. Ajoutez des clients dans la gestion.' : 'No clients yet. Add clients in management.';
+  String get enterAmountReceived => locale.languageCode == 'fr' ? 'Entrer le montant reçu' : 'Enter amount received';
+  String get clear => locale.languageCode == 'fr' ? 'Effacer' : 'Clear';
+
+  // Orders
+  String get voidOrder => locale.languageCode == 'fr' ? 'Annuler la commande ?' : 'Void order?';
+  String get voidOrderContent => locale.languageCode == 'fr' ? 'Cela annule la commande et retourne les articles en stock. Cette action est irréversible.' : 'This cancels the order and returns the items to stock. This cannot be undone.';
+  String get keep => locale.languageCode == 'fr' ? 'Conserver' : 'Keep';
+  String get voidLabel => locale.languageCode == 'fr' ? 'Annuler' : 'Void';
+  String get orderVoided => locale.languageCode == 'fr' ? 'Commande annulée, stock retourné' : 'Order voided, stock returned';
+  String get soldBy => locale.languageCode == 'fr' ? 'Vendu par' : 'Sold by';
+  String get voided => locale.languageCode == 'fr' ? 'annulée' : 'voided';
+  String get noOrdersYet => locale.languageCode == 'fr' ? 'Aucune commande' : 'No orders yet';
+
+  // Reports
+  String get restrictedAdmin => locale.languageCode == 'fr' ? 'Accès restreint : Admin uniquement' : 'Restricted: Admin only';
+  String get dailySalesReport => locale.languageCode == 'fr' ? 'Rapport des ventes journalier' : 'Daily Sales Report';
+  String get totalSalesLabel => locale.languageCode == 'fr' ? 'Ventes totales' : 'Total sales';
+  String get vatCollected => locale.languageCode == 'fr' ? 'TVA collectée' : 'VAT collected';
+  String get cashInDrawer => locale.languageCode == 'fr' ? 'Espèces en caisse' : 'Cash in drawer';
+  String get noSalesToday => locale.languageCode == 'fr' ? 'Aucune vente aujourd\'hui' : 'No sales today';
+  String get ordersCount => locale.languageCode == 'fr' ? 'commandes' : 'orders';
+
+  // Admin
+  String get cloudSyncLabel => locale.languageCode == 'fr' ? 'Synchronisation Cloud' : 'Cloud sync';
+  String get syncNowLabel2 => locale.languageCode == 'fr' ? 'Synchroniser maintenant' : 'Sync now';
+  String get productsCount => locale.languageCode == 'fr' ? 'produits' : 'products';
+  String get staffMembers => locale.languageCode == 'fr' ? 'membres du personnel' : 'staff members';
+  String get clientsCount => locale.languageCode == 'fr' ? 'clients' : 'clients';
+
+  // Dashboard
+  String get last7days => locale.languageCode == 'fr' ? 'Les 7 derniers jours' : 'Last 7 days';
+  String get topStaffThisWeek => locale.languageCode == 'fr' ? 'Meilleurs vendeurs cette semaine' : 'Top Staff This Week';
+  String get byTotalSales => locale.languageCode == 'fr' ? 'Par ventes totales' : 'By total sales';
+  String get lowStockAlertLabel => locale.languageCode == 'fr' ? 'Alerte stock bas' : 'Low Stock Alert';
+
+  // Settings
+  String get pushLocalToCloud => locale.languageCode == 'fr' ? 'Envoyer local vers le cloud' : 'Push Local to Cloud';
+  String get pullFromCloudLabel => locale.languageCode == 'fr' ? 'Récupérer du cloud' : 'Pull from Cloud';
+  String get emailSupportLabel => locale.languageCode == 'fr' ? 'Support par email' : 'Email support';
+  String get callSupportLabel => locale.languageCode == 'fr' ? 'Support par téléphone' : 'Call support';
+  String get viewPrivacyPolicy => locale.languageCode == 'fr' ? 'Voir notre politique de confidentialité' : 'View our privacy policy';
+  String get readTerms => locale.languageCode == 'fr' ? 'Lire nos conditions' : 'Read our terms';
+  String get languageRestart => locale.languageCode == 'fr' ? 'Le changement de langue nécessite le redémarrage' : 'Language change requires app restart';
+  String get currentRate => locale.languageCode == 'fr' ? 'Actuel' : 'Current';
+
+  // Dashboard scaffold
+  String get collapseMenu => locale.languageCode == 'fr' ? 'Réduire le menu' : 'Collapse menu';
+  String get expandMenu => locale.languageCode == 'fr' ? 'Étendre le menu' : 'Expand menu';
+  String get openMenu => locale.languageCode == 'fr' ? 'Ouvrir le menu' : 'Open menu';
+  String get navigation => locale.languageCode == 'fr' ? 'Navigation' : 'Navigation';
+
+  // Search
+  String get searchStaff => locale.languageCode == 'fr' ? 'Rechercher personnel...' : 'Search staff...';
+  String get searchProducts => locale.languageCode == 'fr' ? 'Rechercher produits...' : 'Search products...';
+  String get searchClients => locale.languageCode == 'fr' ? 'Rechercher clients...' : 'Search clients...';
+  String get noStaffMembers => locale.languageCode == 'fr' ? 'Aucun membre du personnel' : 'No staff members';
+  String get noProductsFound => locale.languageCode == 'fr' ? 'Aucun produit trouvé' : 'No products found';
+  String get noClients => locale.languageCode == 'fr' ? 'Aucun client' : 'No clients';
+
+  // Entity table
+  String get previous => locale.languageCode == 'fr' ? 'Précédent' : 'Previous';
+  String get next => locale.languageCode == 'fr' ? 'Suivant' : 'Next';
+  String pageInfo(int current, int total, int count) => locale.languageCode == 'fr'
+      ? 'Page $current sur $total ($count éléments)'
+      : 'Page $current of $total ($count items)';
+
+  // Staff dialog
+  String get nameField => locale.languageCode == 'fr' ? 'Nom *' : 'Name *';
+  String get phoneField => locale.languageCode == 'fr' ? 'Téléphone' : 'Phone';
+  String get pinField => locale.languageCode == 'fr' ? 'PIN (laisser vide pour conserver)' : 'PIN (leave blank to keep)';
+  String get pinFieldRequired => locale.languageCode == 'fr' ? 'PIN *' : 'PIN *';
+  String get roleField => locale.languageCode == 'fr' ? 'Rôle *' : 'Role *';
+  String get activeField => locale.languageCode == 'fr' ? 'Actif' : 'Active';
+  String get editResetPin => locale.languageCode == 'fr' ? 'Modifier / Réinitialiser PIN' : 'Edit / Reset PIN';
+  String get activateDeactivate => locale.languageCode == 'fr' ? 'Activer/Désactiver' : 'Activate/Deactivate';
+  String get noSalespersonsTap => locale.languageCode == 'fr' ? 'Aucun vendeur. Appuyez sur + pour ajouter.' : 'No salespersons. Tap + to add.';
+  String get noClientsTap => locale.languageCode == 'fr' ? 'Aucun client. Appuyez sur + pour ajouter.' : 'No clients yet. Tap + to add.';
+  String get noProductsTap => locale.languageCode == 'fr' ? 'Aucun produit. Appuyez sur + pour ajouter.' : 'No products. Tap + to add.';
+  String get deleteStaffQuestion => locale.languageCode == 'fr' ? 'Supprimer le personnel ?' : 'Delete Staff?';
+  String get deleteProductQuestion => locale.languageCode == 'fr' ? 'Supprimer le produit ?' : 'Delete Product?';
+  String get deleteClientQuestion => locale.languageCode == 'fr' ? 'Supprimer le client ?' : 'Delete Client?';
+  String areYouSureDelete(String name) => locale.languageCode == 'fr'
+      ? 'Êtes-vous sûr de vouloir supprimer « $name » ?'
+      : 'Are you sure you want to delete "$name"?';
+  String get addSalesperson => locale.languageCode == 'fr' ? 'Ajouter vendeur' : 'Add Salesperson';
+  String get editSalesperson => locale.languageCode == 'fr' ? 'Modifier vendeur' : 'Edit Salesperson';
+  String get salesPersons => locale.languageCode == 'fr' ? 'Vendeurs' : 'Salespersons';
+
+  // Product fields
+  String get salePriceXaf => locale.languageCode == 'fr' ? 'Prix de vente (XAF) *' : 'Sale Price (XAF) *';
+  String get costPriceXaf => locale.languageCode == 'fr' ? 'Prix de revient (XAF)' : 'Cost Price (XAF)';
+  String get unitField => locale.languageCode == 'fr' ? 'Unité *' : 'Unit *';
+  String get stockField => locale.languageCode == 'fr' ? 'Stock *' : 'Stock *';
+  String get descriptionField => locale.languageCode == 'fr' ? 'Description' : 'Description';
+  String get stockLabel => locale.languageCode == 'fr' ? 'Stock' : 'Stock';
+
+  // Client fields
+  String get nameFrField => locale.languageCode == 'fr' ? 'Nom (Français)' : 'Name (French)';
+  String get typeField => locale.languageCode == 'fr' ? 'Type *' : 'Type *';
+  String get contactPersonField => locale.languageCode == 'fr' ? 'Personne de contact' : 'Contact Person';
+  String get subdivisionField => locale.languageCode == 'fr' ? 'Arrondissement' : 'Subdivision';
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

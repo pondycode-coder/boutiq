@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/database/models/user.dart';
+import '../../../core/localization/app_localizations.dart';
 import '../application/admin_provider.dart';
 
 class UserManagerScreen extends ConsumerWidget {
@@ -39,20 +40,20 @@ class UserManagerScreen extends ConsumerWidget {
         var role = user?.role ?? 'salesperson';
         return StatefulBuilder(
           builder: (context, setState) => AlertDialog(
-            title: Text(user == null ? 'Add Salesperson' : 'Edit Salesperson'),
+            title: Text(user == null ? AppLocalizations.of(context)!.addSalesperson : AppLocalizations.of(context)!.editSalesperson),
             content: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: nameController,
-                    decoration: const InputDecoration(labelText: 'Name'),
+                    decoration: InputDecoration(labelText: AppLocalizations.of(context)!.nameField),
                   ),
                   const SizedBox(height: 8),
                   TextField(
                     controller: phoneController,
                     keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(labelText: 'Phone'),
+                    decoration: InputDecoration(labelText: AppLocalizations.of(context)!.phoneField),
                   ),
                   const SizedBox(height: 8),
                   TextField(
@@ -64,9 +65,9 @@ class UserManagerScreen extends ConsumerWidget {
                   DropdownButtonFormField<String>(
                     value: role,
                     decoration: const InputDecoration(labelText: 'Role'),
-                    items: const [
-                      DropdownMenuItem(value: 'salesperson', child: Text('Salesperson')),
-                      DropdownMenuItem(value: 'admin', child: Text('Admin')),
+                    items: [
+                      DropdownMenuItem(value: 'salesperson', child: Text(AppLocalizations.of(context)!.salesperson)),
+                      DropdownMenuItem(value: 'admin', child: Text(AppLocalizations.of(context)!.admin)),
                     ],
                     onChanged: (value) => setState(() => role = value ?? 'salesperson'),
                   ),
@@ -76,7 +77,7 @@ class UserManagerScreen extends ConsumerWidget {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
+                child: Text(AppLocalizations.of(context)!.cancel),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -94,7 +95,7 @@ class UserManagerScreen extends ConsumerWidget {
                     ),
                   );
                 },
-                child: const Text('Save'),
+                child: Text(AppLocalizations.of(context)!.save),
               ),
             ],
           ),
@@ -113,17 +114,17 @@ class UserManagerScreen extends ConsumerWidget {
     final usersState = ref.watch(usersNotifierProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Salespersons')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.salesPersons)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _addUser(context, ref),
         icon: const Icon(Icons.person_add),
-        label: const Text('Add'),
+        label: Text(AppLocalizations.of(context)!.add),
       ),
       body: usersState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Error: $err')),
         data: (users) => users.isEmpty
-            ? const Center(child: Text('No salespersons. Tap + to add.'))
+            ? Center(child: Text(AppLocalizations.of(context)!.noSalespersonsTap))
             : ListView.builder(
                 padding: const EdgeInsets.only(bottom: 80),
                 itemCount: users.length,
@@ -156,9 +157,9 @@ class UserManagerScreen extends ConsumerWidget {
                                 .toggleActive(user.userId);
                         }
                       },
-                      itemBuilder: (context) => const [
-                        PopupMenuItem(value: 'edit', child: Text('Edit / Reset PIN')),
-                        PopupMenuItem(value: 'toggle', child: Text('Activate/Deactivate')),
+                      itemBuilder: (context) => [
+                        PopupMenuItem(value: 'edit', child: Text(AppLocalizations.of(context)!.editResetPin)),
+                        PopupMenuItem(value: 'toggle', child: Text(AppLocalizations.of(context)!.activateDeactivate)),
                       ],
                     ),
                   );

@@ -22,7 +22,7 @@ class SettingsScreen extends ConsumerWidget {
     final supabaseAvailable = SupabaseService.isAvailable;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.settings)),
       body: ListView(
         padding: const EdgeInsets.all(DesignTokens.spacingMd),
         children: [
@@ -37,7 +37,7 @@ class SettingsScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Account',
+                    AppLocalizations.of(context)!.account,
                     style: GoogleFonts.inter(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -86,7 +86,7 @@ class SettingsScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Cloud Sync',
+                        AppLocalizations.of(context)!.cloudSync,
                         style: GoogleFonts.inter(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -97,7 +97,7 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: DesignTokens.spacingMd),
                   Text(
-                    supabaseAvailable ? 'Connected to Supabase' : 'Supabase not configured',
+                    supabaseAvailable ? AppLocalizations.of(context)!.connectedToSupabase : AppLocalizations.of(context)!.supabaseNotConfigured,
                     style: GoogleFonts.inter(
                       fontSize: 13,
                       color: supabaseAvailable ? Colors.green : Colors.orange,
@@ -118,7 +118,7 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                           )
                         : const Icon(Icons.sync),
-                    label: Text(syncStatus.syncing ? 'Syncing...' : 'Sync Now'),
+                    label: Text(syncStatus.syncing ? AppLocalizations.of(context)!.loading : AppLocalizations.of(context)!.syncNowLabel),
                     style: FilledButton.styleFrom(
                       minimumSize: const Size(double.infinity, 48),
                     ),
@@ -129,7 +129,7 @@ class SettingsScreen extends ConsumerWidget {
                       await SyncService.pushAll();
                     },
                     icon: const Icon(Icons.cloud_upload),
-                    label: const Text('Push Local to Cloud'),
+                    label: Text(AppLocalizations.of(context)!.pushLocalToCloud),
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 48),
                     ),
@@ -141,7 +141,7 @@ class SettingsScreen extends ConsumerWidget {
                       await SyncService.pullOrders();
                     },
                     icon: const Icon(Icons.cloud_download),
-                    label: const Text('Pull from Cloud'),
+                    label: Text(AppLocalizations.of(context)!.pullFromCloudLabel),
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 48),
                     ),
@@ -162,7 +162,7 @@ class SettingsScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Data',
+                    AppLocalizations.of(context)!.data,
                     style: GoogleFonts.inter(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -171,25 +171,25 @@ class SettingsScreen extends ConsumerWidget {
                   const SizedBox(height: DesignTokens.spacingMd),
                   _SettingsTile(
                     icon: Icons.inventory_2,
-                    title: 'Products',
+                    title: AppLocalizations.of(context)!.products,
                     subtitle: '${HiveService.productsBox.length} items',
                     onTap: () => context.push('/dashboard/products'),
                   ),
                   _SettingsTile(
                     icon: Icons.group,
-                    title: 'Staff',
+                    title: AppLocalizations.of(context)!.staff,
                     subtitle: '${HiveService.usersBox.length} members',
                     onTap: () => context.push('/dashboard/staff'),
                   ),
                   _SettingsTile(
                     icon: Icons.people,
-                    title: 'Clients',
+                    title: AppLocalizations.of(context)!.clients,
                     subtitle: '${HiveService.clientsBox.length} clients',
                     onTap: () => context.push('/dashboard/clients'),
                   ),
                   _SettingsTile(
                     icon: Icons.receipt_long,
-                    title: 'Orders',
+                    title: AppLocalizations.of(context)!.orders,
                     subtitle: '${HiveService.ordersBox.length} orders',
                     onTap: () => context.push('/orders'),
                   ),
@@ -209,7 +209,7 @@ class SettingsScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Tax & Currency',
+                    AppLocalizations.of(context)!.taxCurrency,
                     style: GoogleFonts.inter(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -235,7 +235,7 @@ class SettingsScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Support',
+                    AppLocalizations.of(context)!.support,
                     style: GoogleFonts.inter(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -245,14 +245,14 @@ class SettingsScreen extends ConsumerWidget {
                   _SettingsTile(
                     icon: Icons.email_outlined,
                     title: 'pondycode@gmail.com',
-                    subtitle: 'Email support',
+                    subtitle: AppLocalizations.of(context)!.emailSupportLabel,
                     onTap: () => _launchUrl('mailto:pondycode@gmail.com'),
                     leadingIconColor: Colors.blue,
                   ),
                   _SettingsTile(
                     icon: Icons.phone_outlined,
                     title: '+237 674 667 234',
-                    subtitle: 'Call support',
+                    subtitle: AppLocalizations.of(context)!.callSupportLabel,
                     onTap: () => _launchUrl('tel:+237674667234'),
                     leadingIconColor: Colors.green,
                   ),
@@ -272,7 +272,7 @@ class SettingsScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'App Info',
+                    AppLocalizations.of(context)!.appInfo,
                     style: GoogleFonts.inter(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -281,20 +281,20 @@ class SettingsScreen extends ConsumerWidget {
                   const SizedBox(height: DesignTokens.spacingMd),
                   _SettingsTile(
                     icon: Icons.info_outline,
-                    title: 'Version',
+                    title: AppLocalizations.of(context)!.version,
                     subtitle: '1.0.0',
                     onTap: null,
                   ),
                   _SettingsTile(
                     icon: Icons.description_outlined,
-                    title: 'Privacy Policy',
-                    subtitle: 'View our privacy policy',
+                    title: AppLocalizations.of(context)!.privacyPolicy,
+                    subtitle: AppLocalizations.of(context)!.viewPrivacyPolicy,
                     onTap: () => _launchUrl('https://example.com/privacy'),
                   ),
                   _SettingsTile(
                     icon: Icons.article_outlined,
-                    title: 'Terms of Service',
-                    subtitle: 'Read our terms',
+                    title: AppLocalizations.of(context)!.termsOfService,
+                    subtitle: AppLocalizations.of(context)!.readTerms,
                     onTap: () => _launchUrl('https://example.com/terms'),
                   ),
                 ],
@@ -417,7 +417,7 @@ class _VatRateEditor extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'VAT Rate (%)',
+              AppLocalizations.of(context)!.vatRateLabel,
               style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -446,21 +446,21 @@ class _VatRateEditor extends ConsumerWidget {
                     if (value != null && value >= 0 && value <= 100) {
                       notifier.setVatRate(value / 100);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('VAT rate updated to ${value.toStringAsFixed(2)}%')),
+                        SnackBar(content: Text('${AppLocalizations.of(context)!.vatRateSaved} ${value.toStringAsFixed(2)}%')),
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Invalid VAT rate (0-100)')),
+                        SnackBar(content: Text(AppLocalizations.of(context)!.invalidVatRate)),
                       );
                     }
                   },
-                  child: const Text('Save'),
+                  child: Text(AppLocalizations.of(context)!.save),
                 ),
               ],
             ),
             const SizedBox(height: DesignTokens.spacingXs),
             Text(
-              'Current: ${(rate * 100).toStringAsFixed(2)}%',
+              '${AppLocalizations.of(context)!.currentRate}: ${(rate * 100).toStringAsFixed(2)}%',
               style: GoogleFonts.inter(
                 fontSize: 12,
                 color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
@@ -485,7 +485,7 @@ class _LanguageSelector extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Language',
+          AppLocalizations.of(context)!.language,
           style: GoogleFonts.inter(
             fontSize: 14,
             fontWeight: FontWeight.w500,
@@ -499,7 +499,7 @@ class _LanguageSelector extends ConsumerWidget {
                 onPressed: currentLang == 'fr' ? null : () {
                   // TODO: Implement locale change
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Language change requires app restart')),
+                    SnackBar(content: Text(AppLocalizations.of(context)!.languageRestart)),
                   );
                 },
                 child: Text(currentLang == 'fr' ? 'Français ✓' : 'Français'),
@@ -511,7 +511,7 @@ class _LanguageSelector extends ConsumerWidget {
                 onPressed: currentLang == 'en' ? null : () {
                   // TODO: Implement locale change
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Language change requires app restart')),
+                    SnackBar(content: Text(AppLocalizations.of(context)!.languageRestart)),
                   );
                 },
                 child: Text(currentLang == 'en' ? 'English ✓' : 'English'),
@@ -521,7 +521,7 @@ class _LanguageSelector extends ConsumerWidget {
         ),
         const SizedBox(height: DesignTokens.spacingXs),
         Text(
-          'Current: ${currentLang == 'fr' ? 'Français' : 'English'}',
+          '${AppLocalizations.of(context)!.currentRate}: ${currentLang == 'fr' ? 'Français' : 'English'}',
           style: GoogleFonts.inter(
             fontSize: 12,
             color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),

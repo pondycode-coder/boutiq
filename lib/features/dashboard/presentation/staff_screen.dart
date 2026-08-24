@@ -8,6 +8,7 @@ import '../../../core/sync/sync_service.dart';
 import '../../../core/utils/id_generator.dart';
 import '../../../core/widgets/entity_data_table.dart';
 import '../../../core/theme/design_tokens.dart';
+import '../../../core/localization/app_localizations.dart';
 
 class StaffScreen extends ConsumerStatefulWidget {
   const StaffScreen({super.key});
@@ -73,7 +74,7 @@ class _StaffScreenState extends ConsumerState<StaffScreen> {
               labelPadding: const EdgeInsets.symmetric(horizontal: 8),
             ),
           ),
-          buildStatusChip(u.isActive ? 'Active' : 'Inactive'),
+          buildStatusChip(u.isActive ? AppLocalizations.of(context)!.activeField : 'Inactive'),
           buildCell(
             '${u.createdAt.day}/${u.createdAt.month}/${u.createdAt.year}',
           ),
@@ -115,16 +116,16 @@ class _StaffScreenState extends ConsumerState<StaffScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Staff?'),
-        content: Text('Are you sure you want to delete "${user.name}"?'),
+        title: Text(AppLocalizations.of(context)!.deleteStaffQuestion),
+        content: Text(AppLocalizations.of(context)!.areYouSureDelete(user.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -153,7 +154,7 @@ class _StaffScreenState extends ConsumerState<StaffScreen> {
     return showDialog<User>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(isEditing ? 'Edit Staff' : 'Add Staff'),
+        title: Text(isEditing ? AppLocalizations.of(context)!.editStaff : AppLocalizations.of(context)!.addStaff),
         content: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 400),
@@ -162,19 +163,19 @@ class _StaffScreenState extends ConsumerState<StaffScreen> {
               children: [
                 TextField(
                   controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Name *'),
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context)!.nameField),
                 ),
                 const SizedBox(height: DesignTokens.spacingMd),
                 TextField(
                   controller: phoneController,
-                  decoration: const InputDecoration(labelText: 'Phone'),
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context)!.phoneField),
                   keyboardType: TextInputType.phone,
                 ),
                 const SizedBox(height: DesignTokens.spacingMd),
                 TextField(
                   controller: pinController,
                   decoration: InputDecoration(
-                    labelText: isEditing ? 'PIN (leave blank to keep)' : 'PIN *',
+                    labelText: isEditing ? AppLocalizations.of(context)!.pinField : AppLocalizations.of(context)!.pinFieldRequired,
                   ),
                   keyboardType: TextInputType.number,
                   obscureText: true,
@@ -182,16 +183,16 @@ class _StaffScreenState extends ConsumerState<StaffScreen> {
                 const SizedBox(height: DesignTokens.spacingMd),
                 DropdownButtonFormField<String>(
                   value: role,
-                  decoration: const InputDecoration(labelText: 'Role *'),
-                  items: const [
-                    DropdownMenuItem(value: 'admin', child: Text('Admin')),
-                    DropdownMenuItem(value: 'salesperson', child: Text('Salesperson')),
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context)!.roleField),
+                  items: [
+                    DropdownMenuItem(value: 'admin', child: Text(AppLocalizations.of(context)!.admin)),
+                    DropdownMenuItem(value: 'salesperson', child: Text(AppLocalizations.of(context)!.salesperson)),
                   ],
                   onChanged: (v) => role = v ?? 'salesperson',
                 ),
                 const SizedBox(height: DesignTokens.spacingMd),
                 CheckboxListTile(
-                  title: const Text('Active'),
+                  title: Text(AppLocalizations.of(context)!.activeField),
                   value: isActive,
                   onChanged: (v) => setState(() => isActive = v ?? true),
                   contentPadding: EdgeInsets.zero,
@@ -204,7 +205,7 @@ class _StaffScreenState extends ConsumerState<StaffScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           FilledButton(
             onPressed: () {
@@ -214,13 +215,13 @@ class _StaffScreenState extends ConsumerState<StaffScreen> {
 
               if (name.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Name is required')),
+                  SnackBar(content: Text(AppLocalizations.of(context)!.nameRequired)),
                 );
                 return;
               }
               if (!isEditing && pin.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('PIN is required for new staff')),
+                  SnackBar(content: Text(AppLocalizations.of(context)!.pinRequired)),
                 );
                 return;
               }
@@ -238,7 +239,7 @@ class _StaffScreenState extends ConsumerState<StaffScreen> {
                 ..createdAt = user?.createdAt ?? DateTime.now()
                 ..updatedAt = DateTime.now());
             },
-            child: Text(isEditing ? 'Save' : 'Add'),
+            child: Text(isEditing ? AppLocalizations.of(context)!.save : AppLocalizations.of(context)!.add),
           ),
         ],
       ),
@@ -249,7 +250,7 @@ class _StaffScreenState extends ConsumerState<StaffScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Staff'),
+        title: Text(AppLocalizations.of(context)!.staff),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60),
           child: Padding(
@@ -257,7 +258,7 @@ class _StaffScreenState extends ConsumerState<StaffScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search staff...',
+                hintText: AppLocalizations.of(context)!.searchStaff,
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
@@ -283,8 +284,8 @@ class _StaffScreenState extends ConsumerState<StaffScreen> {
         onEdit: _editStaff,
         onDelete: _deleteStaff,
         onAdd: _addStaff,
-        addLabel: 'Add Staff',
-        emptyMessage: 'No staff members',
+        addLabel: AppLocalizations.of(context)!.addStaff,
+        emptyMessage: AppLocalizations.of(context)!.noStaffMembers,
         emptyIcon: Icons.group_outlined,
       ),
     );

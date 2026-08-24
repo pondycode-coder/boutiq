@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/config/cameroon_config.dart';
 import '../../../core/database/hive_service.dart';
 import '../../../core/database/models/client.dart';
+import '../../../core/localization/app_localizations.dart';
 import '../application/admin_provider.dart';
 
 class ClientManagerScreen extends ConsumerWidget {
@@ -60,20 +61,20 @@ class ClientManagerScreen extends ConsumerWidget {
         var clientType = client?.clientType ?? 'retailer';
         return StatefulBuilder(
           builder: (context, setState) => AlertDialog(
-            title: Text(client == null ? 'Add Client' : 'Edit Client'),
+            title: Text(client == null ? AppLocalizations.of(context)!.addClient : AppLocalizations.of(context)!.editClient),
             content: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: nameController,
-                    decoration: const InputDecoration(labelText: 'Name'),
+                    decoration: InputDecoration(labelText: AppLocalizations.of(context)!.nameField),
                   ),
                   const SizedBox(height: 8),
                   TextField(
                     controller: phoneController,
                     keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(labelText: 'Phone'),
+                    decoration: InputDecoration(labelText: AppLocalizations.of(context)!.phoneField),
                   ),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
@@ -109,7 +110,7 @@ class ClientManagerScreen extends ConsumerWidget {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
+                child: Text(AppLocalizations.of(context)!.cancel),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -126,7 +127,7 @@ class ClientManagerScreen extends ConsumerWidget {
                     ),
                   );
                 },
-                child: const Text('Save'),
+                child: Text(AppLocalizations.of(context)!.save),
               ),
             ],
           ),
@@ -147,17 +148,17 @@ class ClientManagerScreen extends ConsumerWidget {
     final clientsState = ref.watch(clientsNotifierProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Clients')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.clients)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _addClient(context, ref),
         icon: const Icon(Icons.person_add),
-        label: const Text('Add'),
+        label: Text(AppLocalizations.of(context)!.add),
       ),
       body: clientsState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Error: $err')),
         data: (clients) => clients.isEmpty
-            ? const Center(child: Text('No clients yet. Tap + to add.'))
+            ? Center(child: Text(AppLocalizations.of(context)!.noClientsTap))
             : ListView.builder(
                 padding: const EdgeInsets.only(bottom: 80),
                 itemCount: clients.length,
@@ -184,16 +185,16 @@ class ClientManagerScreen extends ConsumerWidget {
                         final confirmed = await showDialog<bool>(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: const Text('Delete client?'),
-                            content: Text('Delete ${client.name}?'),
+                            title: Text(AppLocalizations.of(context)!.deleteClientQuestion),
+                            content: Text(AppLocalizations.of(context)!.areYouSureDelete(client.name)),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(context, false),
-                                child: const Text('Cancel'),
+                                child: Text(AppLocalizations.of(context)!.cancel),
                               ),
                               ElevatedButton(
                                 onPressed: () => Navigator.pop(context, true),
-                                child: const Text('Delete'),
+                                child: Text(AppLocalizations.of(context)!.delete),
                               ),
                             ],
                           ),

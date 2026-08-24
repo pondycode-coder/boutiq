@@ -8,6 +8,7 @@ import '../../../core/sync/sync_service.dart';
 import '../../../core/utils/id_generator.dart';
 import '../../../core/widgets/entity_data_table.dart';
 import '../../../core/theme/design_tokens.dart';
+import '../../../core/localization/app_localizations.dart';
 
 class ProductsScreen extends ConsumerStatefulWidget {
   const ProductsScreen({super.key});
@@ -142,7 +143,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
               ],
             ),
           ),
-          buildStatusChip(p.isActive ? 'Active' : 'Inactive'),
+          buildStatusChip(p.isActive ? AppLocalizations.of(context)!.activeField : 'Inactive'),
           buildActionCell<Product>(
             context,
             p,
@@ -181,16 +182,16 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Product?'),
-        content: Text('Are you sure you want to delete "${product.name}"?'),
+        title: Text(AppLocalizations.of(context)!.deleteProductQuestion),
+        content: Text(AppLocalizations.of(context)!.areYouSureDelete(product.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -227,7 +228,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     return showDialog<Product>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(isEditing ? 'Edit Product' : 'Add Product'),
+        title: Text(isEditing ? AppLocalizations.of(context)!.editProduct : AppLocalizations.of(context)!.addProduct),
         content: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 400),
@@ -236,7 +237,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
               children: [
                 TextField(
                   controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Name *'),
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context)!.nameField),
                 ),
                 const SizedBox(height: DesignTokens.spacingMd),
                 TextField(
@@ -287,7 +288,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                   children: [
                     Expanded(
                       child: CheckboxListTile(
-                        title: const Text('Active'),
+                        title: Text(AppLocalizations.of(context)!.activeField),
                         value: isActive,
                         onChanged: (v) => isActive = v ?? true,
                         contentPadding: EdgeInsets.zero,
@@ -309,7 +310,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           FilledButton(
             onPressed: () {
@@ -323,7 +324,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 
               if (name.isEmpty || category.isEmpty || unit.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please fill all required fields')),
+                  SnackBar(content: Text(AppLocalizations.of(context)!.fillRequiredFields)),
                 );
                 return;
               }
@@ -342,7 +343,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                 ..createdAt = product?.createdAt ?? DateTime.now()
                 ..updatedAt = DateTime.now());
             },
-            child: Text(isEditing ? 'Save' : 'Add'),
+            child: Text(isEditing ? AppLocalizations.of(context)!.save : AppLocalizations.of(context)!.add),
           ),
         ],
       ),
@@ -354,7 +355,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     final categories = _getCategories();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Products'),
+        title: Text(AppLocalizations.of(context)!.products),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: DesignTokens.spacingMd),
@@ -376,7 +377,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search products...',
+                hintText: AppLocalizations.of(context)!.searchProducts,
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
@@ -402,8 +403,8 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
         onEdit: _editProduct,
         onDelete: _deleteProduct,
         onAdd: _addProduct,
-        addLabel: 'Add Product',
-        emptyMessage: 'No products found',
+        addLabel: AppLocalizations.of(context)!.addProduct,
+        emptyMessage: AppLocalizations.of(context)!.noProductsFound,
         emptyIcon: Icons.inventory_2_outlined,
       ),
     );

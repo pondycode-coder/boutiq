@@ -7,6 +7,7 @@ import '../../../core/database/models/cash_payment.dart';
 import '../../../core/database/models/client.dart';
 import '../../../core/database/models/order.dart';
 import '../../../core/database/models/user.dart';
+import '../../../core/localization/app_localizations.dart';
 import '../../../core/utils/receipt_service.dart';
 
 Future<void> showReceiptDialog(
@@ -78,7 +79,7 @@ class _ReceiptDialogState extends State<_ReceiptDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Receipt'),
+      title: Text(AppLocalizations.of(context)!.receipt),
       content: SizedBox(
         width: 360,
         height: 480,
@@ -92,17 +93,17 @@ class _ReceiptDialogState extends State<_ReceiptDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Close'),
+          child: Text(AppLocalizations.of(context)!.close),
         ),
         TextButton.icon(
           onPressed: _share,
           icon: const Icon(Icons.share),
-          label: const Text('Share'),
+          label: Text(AppLocalizations.of(context)!.share),
         ),
         ElevatedButton.icon(
           onPressed: _print,
           icon: const Icon(Icons.print),
-          label: const Text('Print'),
+          label: Text(AppLocalizations.of(context)!.printLabel),
         ),
       ],
     );

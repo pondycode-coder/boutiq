@@ -4,6 +4,7 @@ import '../../../core/config/cameroon_config.dart';
 import '../../../core/database/hive_service.dart';
 import '../../../core/database/models/client.dart';
 import '../../../core/database/models/product.dart';
+import '../../../core/localization/app_localizations.dart';
 import '../../auth/application/auth_provider.dart';
 import '../../orders/application/order_provider.dart';
 import '../application/cart_provider.dart';
@@ -11,7 +12,9 @@ import '../application/products_provider.dart';
 import 'receipt_dialog.dart';
 
 class PosScreen extends ConsumerStatefulWidget {
-  const PosScreen({super.key});
+  const PosScreen({super.key, this.embedded = false});
+
+  final bool embedded;
 
   @override
   ConsumerState<PosScreen> createState() => _PosScreenState();
@@ -27,6 +30,7 @@ class _PosScreenState extends ConsumerState<PosScreen> {
     final cart = ref.watch(cartNotifierProvider);
     final cartNotifier = ref.read(cartNotifierProvider.notifier);
     final user = ref.watch(authNotifierProvider);
+    final loc = AppLocalizations.of(context)!;
 
     List<String> _getCategories(List<Product> products) {
       final categories = products.map((p) => p.category).where((c) => c.isNotEmpty).toSet().toList();
@@ -34,9 +38,37 @@ class _PosScreenState extends ConsumerState<PosScreen> {
       return ['All', ...categories];
     }
 
+    final body = Column(
+      children: [
+        Expanded(
+          child: productsAsync.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (err, stack) => Center(child: Text('Error: $err')),
+            data: (list) {
+              final filtered = _categoryFilter == 'All'
+                  ? list
+                  : list.where((p) => p.category == _categoryFilter).toList();
+              return _ProductGrid(
+                products: filtered,
+                onAdd: (product) => cartNotifier.addItem(product),
+              );
+            },
+          ),
+        ),
+        _CartPanel(
+          cart: cart,
+          selectedClient: _selectedClient,
+          onPickClient: _pickClient,
+          onCheckout: _checkout,
+        ),
+      ],
+    );
+
+    if (widget.embedded) return body;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cash Register'),
+        title: Text(loc.cashRegister),
         actions: [
           if (user != null)
             Center(
@@ -75,7 +107,7 @@ class _PosScreenState extends ConsumerState<PosScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.logout),
-            tooltip: 'Logout',
+            tooltip: loc.logout,
             onPressed: () {
               cartNotifier.clear();
               ref.read(authNotifierProvider.notifier).logout();
@@ -83,31 +115,7 @@ class _PosScreenState extends ConsumerState<PosScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: productsAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error: $err')),
-              data: (list) {
-                final filtered = _categoryFilter == 'All'
-                    ? list
-                    : list.where((p) => p.category == _categoryFilter).toList();
-                return _ProductGrid(
-                  products: filtered,
-                  onAdd: (product) => cartNotifier.addItem(product),
-                );
-              },
-            ),
-          ),
-          _CartPanel(
-            cart: cart,
-            selectedClient: _selectedClient,
-            onPickClient: _pickClient,
-            onCheckout: _checkout,
-          ),
-        ],
-      ),
+      body: body,
     );
   }
 
@@ -126,8 +134,9 @@ class _PosScreenState extends ConsumerState<PosScreen> {
     final cartNotifier = ref.read(cartNotifierProvider.notifier);
     final cart = ref.read(cartNotifierProvider);
     final user = ref.read(authNotifierProvider);
+    final loc = AppLocalizations.of(context)!;
     if (cart.isEmpty) {
-      _showMessage('Cart is empty');
+      _showMessage(loc.cartEmpty);
       return;
     }
     if (user == null) return;
@@ -152,10 +161,10 @@ class _PosScreenState extends ConsumerState<PosScreen> {
       await ref.read(productsNotifierProvider.notifier).refresh();
       String message;
       if (paymentResult.paymentMethod == 'credit') {
-        message = 'Sale on credit recorded for ${client?.name ?? 'walk-in customer'}';
+        message = '${loc.saleOnCreditRecorded} ${client?.name ?? loc.walkInCustomer}';
       } else {
         final change = paymentResult.amountTendered - order.totalAmount;
-        message = 'Order completed. Change: ${CameroonConfig.formatCurrency(change < 0 ? 0 : change)}';
+        message = '${loc.orderCompletedChange} ${CameroonConfig.formatCurrency(change < 0 ? 0 : change)}';
       }
       _showMessage(message);
       if (!mounted) return;
@@ -176,10 +185,11 @@ class _PosScreenState extends ConsumerState<PosScreen> {
 
   Future<_PaymentResult?> _showPaymentDialog(double total) async {
     final controller = TextEditingController();
+    final loc = AppLocalizations.of(context)!;
     return showDialog<_PaymentResult>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Payment Method'),
+        title: Text(loc.paymentMethodLabel),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -191,8 +201,8 @@ class _PosScreenState extends ConsumerState<PosScreen> {
             const SizedBox(height: 16),
             _PaymentMethodButton(
               icon: Icons.money,
-              label: 'Cash Payment',
-              subtitle: 'Enter amount received',
+              label: loc.cashPayment,
+              subtitle: loc.enterAmountReceived,
               onTap: () async {
                 final amount = await _showCashInputDialog(total);
                 if (amount != null && context.mounted) {
@@ -203,11 +213,11 @@ class _PosScreenState extends ConsumerState<PosScreen> {
             const SizedBox(height: 8),
             _PaymentMethodButton(
               icon: Icons.credit_card,
-              label: 'Pay Later (Credit)',
-              subtitle: 'Record as credit for client',
+              label: loc.payLaterCredit,
+              subtitle: loc.recordAsCredit,
               onTap: () {
                 if (_selectedClient == null) {
-                  _showMessage('Please select a client for credit sales');
+                  _showMessage(loc.selectClientCredit);
                   return;
                 }
                 Navigator.pop(context, _PaymentResult(amountTendered: total, paymentMethod: 'credit'));
@@ -221,10 +231,11 @@ class _PosScreenState extends ConsumerState<PosScreen> {
 
   Future<double?> _showCashInputDialog(double total) async {
     final controller = TextEditingController();
+    final loc = AppLocalizations.of(context)!;
     return showDialog<double>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Cash Payment'),
+        title: Text(loc.cashPayment),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -238,8 +249,8 @@ class _PosScreenState extends ConsumerState<PosScreen> {
               controller: controller,
               keyboardType: const TextInputType.numberWithOptions(
                   decimal: true),
-              decoration: const InputDecoration(
-                labelText: 'Amount received (FCFA)',
+              decoration: InputDecoration(
+                labelText: loc.amountReceivedFcfa,
                 prefixText: 'FCFA ',
               ),
             ),
@@ -248,7 +259,7 @@ class _PosScreenState extends ConsumerState<PosScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(loc.cancel),
           ),
           ElevatedButton(
             onPressed: () {
@@ -256,7 +267,7 @@ class _PosScreenState extends ConsumerState<PosScreen> {
                   controller.text.replaceAll(',', '.'));
               Navigator.pop(context, value);
             },
-            child: const Text('Confirm'),
+            child: Text(loc.confirm),
           ),
         ],
       ),
@@ -280,7 +291,7 @@ class _ProductGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (products.isEmpty) {
-      return const Center(child: Text('No products. Add products first.'));
+      return Center(child: Text(AppLocalizations.of(context)!.noProducts));
     }
     return GridView.builder(
       padding: const EdgeInsets.all(12),
@@ -320,7 +331,7 @@ class _ProductGrid extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'Stock: ${product.stockQuantity}',
+                        '${AppLocalizations.of(context)!.stockLabel}: ${product.stockQuantity}',
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
@@ -354,6 +365,7 @@ class _CartPanel extends ConsumerWidget {
     final subtotal = notifier.subtotal;
     final vat = notifier.vatAmount;
     final total = notifier.total;
+    final loc = AppLocalizations.of(context)!;
 
     return Material(
       elevation: 8,
@@ -373,14 +385,14 @@ class _CartPanel extends ConsumerWidget {
                       icon: const Icon(Icons.person_outline),
                       label: Text(
                         selectedClient == null
-                            ? 'Walk-in customer'
+                            ? loc.walkInCustomer
                             : selectedClient!.name,
                       ),
                     ),
                   ),
                   TextButton(
                     onPressed: () => notifier.clear(),
-                    child: const Text('Clear'),
+                    child: Text(loc.clear),
                   ),
                 ],
               ),
@@ -422,21 +434,21 @@ class _CartPanel extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Subtotal'),
+                  Text(loc.subtotal),
                   Text(CameroonConfig.formatCurrency(subtotal)),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('VAT (19.25%)'),
+                  Text(loc.vat),
                   Text(CameroonConfig.formatCurrency(vat)),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Total',
+                  Text(loc.total,
                       style: Theme.of(context)
                           .textTheme
                           .titleMedium
@@ -453,7 +465,7 @@ class _CartPanel extends ConsumerWidget {
               const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: cart.isEmpty ? null : onCheckout,
-                child: const Text('Complete Sale'),
+                child: Text(loc.completeSale),
               ),
             ],
           ),
@@ -524,9 +536,9 @@ class _ClientPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: clients.isEmpty
-          ? const Padding(
-              padding: EdgeInsets.all(24),
-              child: Text('No clients yet. Add clients in management.'),
+          ? Padding(
+              padding: const EdgeInsets.all(24),
+              child: Text(AppLocalizations.of(context)!.noClientsAdd),
             )
           : ListView.builder(
               itemCount: clients.length,

@@ -8,6 +8,7 @@ import '../../../core/sync/sync_service.dart';
 import '../../../core/utils/id_generator.dart';
 import '../../../core/widgets/entity_data_table.dart';
 import '../../../core/theme/design_tokens.dart';
+import '../../../core/localization/app_localizations.dart';
 
 class ClientsScreen extends ConsumerStatefulWidget {
   const ClientsScreen({super.key});
@@ -94,7 +95,7 @@ class _ClientsScreenState extends ConsumerState<ClientsScreen> {
           ),
           buildCell(c.phone.isEmpty ? '—' : c.phone),
           buildCell(c.region.isEmpty ? '—' : c.region),
-          buildStatusChip(c.isActive ? 'Active' : 'Inactive'),
+          buildStatusChip(c.isActive ? AppLocalizations.of(context)!.activeField : 'Inactive'),
           buildActionCell<Client>(
             context,
             c,
@@ -133,16 +134,16 @@ class _ClientsScreenState extends ConsumerState<ClientsScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Client?'),
-        content: Text('Are you sure you want to delete "${client.name}"?'),
+        title: Text(AppLocalizations.of(context)!.deleteClientQuestion),
+        content: Text(AppLocalizations.of(context)!.areYouSureDelete(client.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -179,7 +180,7 @@ class _ClientsScreenState extends ConsumerState<ClientsScreen> {
     return showDialog<Client>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(isEditing ? 'Edit Client' : 'Add Client'),
+        title: Text(isEditing ? AppLocalizations.of(context)!.editClient : AppLocalizations.of(context)!.addClient),
         content: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 480),
@@ -188,28 +189,28 @@ class _ClientsScreenState extends ConsumerState<ClientsScreen> {
               children: [
                 TextField(
                   controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Name *'),
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context)!.nameField),
                 ),
                 const SizedBox(height: DesignTokens.spacingMd),
                 TextField(
                   controller: nameFrController,
-                  decoration: const InputDecoration(labelText: 'Name (French)'),
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context)!.nameFrField),
                 ),
                 const SizedBox(height: DesignTokens.spacingMd),
                 DropdownButtonFormField<String>(
                   value: clientType,
-                  decoration: const InputDecoration(labelText: 'Type *'),
-                  items: const [
-                    DropdownMenuItem(value: 'retail', child: Text('Retail')),
-                    DropdownMenuItem(value: 'wholesale', child: Text('Wholesale')),
-                    DropdownMenuItem(value: 'corporate', child: Text('Corporate')),
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context)!.typeField),
+                  items: [
+                    DropdownMenuItem(value: 'retail', child: Text(AppLocalizations.of(context)!.retail)),
+                    DropdownMenuItem(value: 'wholesale', child: Text(AppLocalizations.of(context)!.wholesale)),
+                    DropdownMenuItem(value: 'corporate', child: Text(AppLocalizations.of(context)!.corporate)),
                   ],
                   onChanged: (v) => clientType = v ?? 'retail',
                 ),
                 const SizedBox(height: DesignTokens.spacingMd),
                 TextField(
                   controller: phoneController,
-                  decoration: const InputDecoration(labelText: 'Phone'),
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context)!.phoneField),
                   keyboardType: TextInputType.phone,
                 ),
                 const SizedBox(height: DesignTokens.spacingMd),
@@ -245,16 +246,16 @@ class _ClientsScreenState extends ConsumerState<ClientsScreen> {
                 const SizedBox(height: DesignTokens.spacingMd),
                 TextField(
                   controller: subdivisionController,
-                  decoration: const InputDecoration(labelText: 'Subdivision'),
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context)!.subdivisionField),
                 ),
                 const SizedBox(height: DesignTokens.spacingMd),
                 TextField(
                   controller: contactPersonController,
-                  decoration: const InputDecoration(labelText: 'Contact Person'),
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context)!.contactPersonField),
                 ),
                 const SizedBox(height: DesignTokens.spacingMd),
                 CheckboxListTile(
-                  title: const Text('Active'),
+                  title: Text(AppLocalizations.of(context)!.activeField),
                   value: isActive,
                   onChanged: (v) => setState(() => isActive = v ?? true),
                   contentPadding: EdgeInsets.zero,
@@ -267,14 +268,14 @@ class _ClientsScreenState extends ConsumerState<ClientsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           FilledButton(
             onPressed: () {
               final name = nameController.text.trim();
               if (name.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Name is required')),
+                  SnackBar(content: Text(AppLocalizations.of(context)!.nameRequired)),
                 );
                 return;
               }
@@ -302,7 +303,7 @@ class _ClientsScreenState extends ConsumerState<ClientsScreen> {
                 ..createdAt = client?.createdAt ?? DateTime.now()
                 ..updatedAt = DateTime.now());
             },
-            child: Text(isEditing ? 'Save' : 'Add'),
+            child: Text(isEditing ? AppLocalizations.of(context)!.save : AppLocalizations.of(context)!.add),
           ),
         ],
       ),
@@ -313,7 +314,7 @@ class _ClientsScreenState extends ConsumerState<ClientsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Clients'),
+        title: Text(AppLocalizations.of(context)!.clients),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60),
           child: Padding(
@@ -321,7 +322,7 @@ class _ClientsScreenState extends ConsumerState<ClientsScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search clients...',
+                hintText: AppLocalizations.of(context)!.searchClients,
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
@@ -347,8 +348,8 @@ class _ClientsScreenState extends ConsumerState<ClientsScreen> {
         onEdit: _editClient,
         onDelete: _deleteClient,
         onAdd: _addClient,
-        addLabel: 'Add Client',
-        emptyMessage: 'No clients',
+        addLabel: AppLocalizations.of(context)!.addClient,
+        emptyMessage: AppLocalizations.of(context)!.noClients,
         emptyIcon: Icons.people_outline,
       ),
     );

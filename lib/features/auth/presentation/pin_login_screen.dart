@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/database/hive_service.dart';
+import '../../../core/localization/app_localizations.dart';
 import '../application/auth_provider.dart';
 
 class PinLoginScreen extends ConsumerStatefulWidget {
@@ -40,7 +41,7 @@ class _PinLoginScreenState extends ConsumerState<PinLoginScreen> {
       setState(() => _pin = '');
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
-        ..showSnackBar(const SnackBar(content: Text('Invalid PIN')));
+        ..showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.invalidPin)));
     }
     setState(() => _loggingIn = false);
   }
@@ -48,7 +49,7 @@ class _PinLoginScreenState extends ConsumerState<PinLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Cash Register Login')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.cashRegisterLogin)),
       body: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(
@@ -60,13 +61,13 @@ class _PinLoginScreenState extends ConsumerState<PinLoginScreen> {
             children: [
               const SizedBox(height: 40),
               Text(
-                'Enter PIN',
+                AppLocalizations.of(context)!.enterPin,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: 8),
               if (HiveService.usersBox.length == 1)
                 Text(
-                  'First-run default PIN: 1234 (admin)\nChange it in Admin > Salespersons.',
+                  AppLocalizations.of(context)!.firstRunPin,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
@@ -109,7 +110,7 @@ class _PinLoginScreenState extends ConsumerState<PinLoginScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _loggingIn ? null : _login,
-                    child: const Text('Login'),
+                    child: Text(AppLocalizations.of(context)!.loginButton),
                   ),
                 ),
               ),

@@ -111,14 +111,14 @@ final _router = GoRouter(
       branches: [
         StatefulShellBranch(
           routes: [
-            GoRoute(path: '/pos', builder: (context, state) => const PosScreen()),
+            GoRoute(path: '/pos', builder: (context, state) => const PosScreen(embedded: true)),
           ],
         ),
         StatefulShellBranch(
           routes: [
             GoRoute(
               path: '/orders',
-              builder: (context, state) => const OrderListScreen(),
+              builder: (context, state) => const OrderListScreen(embedded: true),
             ),
           ],
         ),

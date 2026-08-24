@@ -12,6 +12,7 @@ import '../../../features/auth/application/auth_provider.dart';
 import '../../../core/widgets/dashboard_components.dart';
 import '../../../core/widgets/dashboard_charts.dart';
 import '../../../core/theme/design_tokens.dart';
+import '../../../core/localization/app_localizations.dart';
 
 final overviewDataProvider = FutureProvider<OverviewData>((ref) async {
   final now = DateTime.now();
@@ -152,7 +153,7 @@ class OverviewScreen extends ConsumerWidget {
                 floating: true,
                 snap: true,
                 title: Text(
-                  'Dashboard',
+                  AppLocalizations.of(context)!.dashboard,
                   style: GoogleFonts.inter(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
@@ -172,15 +173,15 @@ class OverviewScreen extends ConsumerWidget {
                       _buildKpiGrid(context, data),
                       const SizedBox(height: DesignTokens.spacingXl),
                       SectionHeader(
-                        title: 'Sales Trend',
-                        subtitle: 'Last 7 days',
+                        title: AppLocalizations.of(context)!.salesTrend,
+                        subtitle: AppLocalizations.of(context)!.last7days,
                       ),
                       const SizedBox(height: DesignTokens.spacingSm),
                       SalesTrendChart(data: data.salesTrendSpots),
                       const SizedBox(height: DesignTokens.spacingXl),
                       SectionHeader(
-                        title: 'Top Staff This Week',
-                        subtitle: 'By total sales',
+                        title: AppLocalizations.of(context)!.topStaffThisWeek,
+                        subtitle: AppLocalizations.of(context)!.byTotalSales,
                       ),
                       const SizedBox(height: DesignTokens.spacingSm),
                       StaffPerformanceChart(
@@ -214,7 +215,7 @@ class OverviewScreen extends ConsumerWidget {
           mainAxisSpacing: DesignTokens.spacingMd,
           children: [
             KpiCard(
-              title: 'Sales Today',
+              title: AppLocalizations.of(context)!.salesToday,
               value: 'XAF ${data.totalSalesToday.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')}',
               icon: Icons.attach_money,
               color: Colors.green,
@@ -222,7 +223,7 @@ class OverviewScreen extends ConsumerWidget {
               trendUp: true,
             ),
             KpiCard(
-              title: 'Orders Today',
+              title: AppLocalizations.of(context)!.ordersToday,
               value: data.orderCountToday.toString(),
               icon: Icons.receipt_long,
               color: Theme.of(context).colorScheme.primary,
@@ -230,7 +231,7 @@ class OverviewScreen extends ConsumerWidget {
               trendUp: true,
             ),
             KpiCard(
-              title: 'Low Stock Alert',
+              title: AppLocalizations.of(context)!.lowStockAlertLabel,
               value: data.lowStockProducts.toString(),
               icon: Icons.warning_amber_rounded,
               color: data.lowStockProducts > 0 ? Colors.red : Colors.green,

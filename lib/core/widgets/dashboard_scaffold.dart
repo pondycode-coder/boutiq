@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../features/auth/application/auth_provider.dart';
+import '../localization/app_localizations.dart';
 import '../theme/design_tokens.dart';
 
 class DashboardScaffold extends ConsumerStatefulWidget {
@@ -65,41 +66,43 @@ class _DashboardScaffoldState extends ConsumerState<DashboardScaffold>
     final isMobile = context.isMobile;
     final user = ref.watch(authNotifierProvider);
 
+    final loc = AppLocalizations.of(context)!;
+
     final destinations = <NavigationDestination>[
-      const NavigationDestination(
-        icon: Icon(Icons.point_of_sale_outlined),
-        selectedIcon: Icon(Icons.point_of_sale),
-        label: 'POS',
+      NavigationDestination(
+        icon: const Icon(Icons.point_of_sale_outlined),
+        selectedIcon: const Icon(Icons.point_of_sale),
+        label: loc.pos,
       ),
-      const NavigationDestination(
-        icon: Icon(Icons.receipt_long_outlined),
-        selectedIcon: Icon(Icons.receipt_long),
-        label: 'Orders',
+      NavigationDestination(
+        icon: const Icon(Icons.receipt_long_outlined),
+        selectedIcon: const Icon(Icons.receipt_long),
+        label: loc.orders,
       ),
-      const NavigationDestination(
-        icon: Icon(Icons.dashboard_outlined),
-        selectedIcon: Icon(Icons.dashboard),
-        label: 'Overview',
+      NavigationDestination(
+        icon: const Icon(Icons.dashboard_outlined),
+        selectedIcon: const Icon(Icons.dashboard),
+        label: loc.overview,
       ),
-      const NavigationDestination(
-        icon: Icon(Icons.inventory_2_outlined),
-        selectedIcon: Icon(Icons.inventory_2),
-        label: 'Products',
+      NavigationDestination(
+        icon: const Icon(Icons.inventory_2_outlined),
+        selectedIcon: const Icon(Icons.inventory_2),
+        label: loc.products,
       ),
-      const NavigationDestination(
-        icon: Icon(Icons.bar_chart_outlined),
-        selectedIcon: Icon(Icons.bar_chart),
-        label: 'Reports',
+      NavigationDestination(
+        icon: const Icon(Icons.bar_chart_outlined),
+        selectedIcon: const Icon(Icons.bar_chart),
+        label: loc.reports,
       ),
-      const NavigationDestination(
-        icon: Icon(Icons.admin_panel_settings_outlined),
-        selectedIcon: Icon(Icons.admin_panel_settings),
-        label: 'Admin',
+      NavigationDestination(
+        icon: const Icon(Icons.admin_panel_settings_outlined),
+        selectedIcon: const Icon(Icons.admin_panel_settings),
+        label: loc.admin,
       ),
-      const NavigationDestination(
-        icon: Icon(Icons.settings_outlined),
-        selectedIcon: Icon(Icons.settings),
-        label: 'Settings',
+      NavigationDestination(
+        icon: const Icon(Icons.settings_outlined),
+        selectedIcon: const Icon(Icons.settings),
+        label: loc.settings,
       ),
     ];
 
@@ -114,8 +117,8 @@ class _DashboardScaffoldState extends ConsumerState<DashboardScaffold>
             children: [
               IconButton(
                 tooltip: _railWidthAnimation.value > 100
-                    ? 'Collapse menu'
-                    : 'Expand menu',
+                    ? loc.collapseMenu
+                    : loc.expandMenu,
                 icon: AnimatedRotation(
                   turns: _railWidthAnimation.value > 100 ? 0.5 : 0,
                   duration: DesignTokens.animationFast,
@@ -132,7 +135,7 @@ class _DashboardScaffoldState extends ConsumerState<DashboardScaffold>
               const SizedBox(height: DesignTokens.spacingSm),
               ListTile(
                 leading: const Icon(Icons.logout),
-                title: const Text('Logout'),
+                title: Text(loc.logout),
                 dense: true,
                 onTap: _logout,
               ),
@@ -152,7 +155,7 @@ class _DashboardScaffoldState extends ConsumerState<DashboardScaffold>
           _goBranch(index);
         },
         children: [
-          const DrawerHeader(
+          DrawerHeader(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [Color(0xFF1B3A5C), Color(0xFF0D1B2A)],
@@ -174,7 +177,7 @@ class _DashboardScaffoldState extends ConsumerState<DashboardScaffold>
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'Navigation',
+                  loc.navigation,
                   style: TextStyle(color: Colors.white70, fontSize: 12),
                 ),
               ],
@@ -188,7 +191,7 @@ class _DashboardScaffoldState extends ConsumerState<DashboardScaffold>
           const Divider(),
           ListTile(
             leading: const Icon(Icons.logout),
-            title: const Text('Logout'),
+            title: Text(loc.logout),
             onTap: _logout,
           ),
         ],
@@ -201,7 +204,7 @@ class _DashboardScaffoldState extends ConsumerState<DashboardScaffold>
       mobileLeading = IconButton(
         icon: const Icon(Icons.menu),
         onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-        tooltip: 'Open menu',
+        tooltip: loc.openMenu,
       );
     }
 
@@ -211,20 +214,20 @@ class _DashboardScaffoldState extends ConsumerState<DashboardScaffold>
         drawer: mobileDrawer,
         appBar: AppBar(
           leading: mobileLeading,
-          title: Text(_getCurrentTitle(widget.navigationShell.currentIndex)),
+          title: Text(_getCurrentTitle(context, widget.navigationShell.currentIndex)),
           actions: [
             PopupMenuButton<String>(
               onSelected: (value) {
                 if (value == 'logout') _logout();
               },
               itemBuilder: (context) => [
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'logout',
                   child: Row(
                     children: [
                       Icon(Icons.logout, size: 20),
                       SizedBox(width: 12),
-                      Text('Logout'),
+                      Text(loc.logout),
                     ],
                   ),
                 ),
@@ -286,15 +289,16 @@ class _DashboardScaffoldState extends ConsumerState<DashboardScaffold>
     );
   }
 
-  String _getCurrentTitle(int index) {
-    const titles = [
-      'POS',
-      'Orders',
-      'Overview',
-      'Products',
-      'Reports',
-      'Admin',
-      'Settings',
+  String _getCurrentTitle(BuildContext context, int index) {
+    final loc = AppLocalizations.of(context)!;
+    final titles = [
+      loc.pos,
+      loc.orders,
+      loc.overview,
+      loc.products,
+      loc.reports,
+      loc.admin,
+      loc.settings,
     ];
     if (index < titles.length) return titles[index];
     return 'Boutiq';

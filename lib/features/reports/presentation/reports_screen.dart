@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/config/cameroon_config.dart';
 import '../../../features/auth/application/auth_provider.dart';
+import '../../../core/localization/app_localizations.dart';
 import '../application/reports_provider.dart';
 
 class ReportsScreen extends ConsumerWidget {
@@ -11,16 +12,16 @@ class ReportsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (!AuthNotifier.isAdmin) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Daily Sales Report')),
-        body: const Center(
-          child: Text('Restricted: Admin only'),
+        appBar: AppBar(title: Text(AppLocalizations.of(context)!.dailySalesReport)),
+        body: Center(
+          child: Text(AppLocalizations.of(context)!.restrictedAdmin),
         ),
       );
     }
     final report = ref.watch(dailySalesReportProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Daily Sales Report')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.dailySalesReport)),
       body: report.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Error: $err')),
@@ -36,21 +37,21 @@ class ReportsScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Today',
+                        AppLocalizations.of(context)!.today,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 8),
-                      _SummaryRow(label: 'Orders', value: '${r.orderCount}'),
+                      _SummaryRow(label: AppLocalizations.of(context)!.orders, value: '${r.orderCount}'),
                       _SummaryRow(
-                        label: 'Total sales',
+                        label: AppLocalizations.of(context)!.totalSalesLabel,
                         value: CameroonConfig.formatCurrency(r.totalSales),
                       ),
                       _SummaryRow(
-                        label: 'VAT collected',
+                        label: AppLocalizations.of(context)!.vatCollected,
                         value: CameroonConfig.formatCurrency(r.totalVat),
                       ),
                       _SummaryRow(
-                        label: 'Cash in drawer',
+                        label: AppLocalizations.of(context)!.cashInDrawer,
                         value: CameroonConfig.formatCurrency(r.payments),
                       ),
                     ],
@@ -59,14 +60,14 @@ class ReportsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'By salesperson',
+                AppLocalizations.of(context)!.bySalesperson,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 8),
               if (byPerson.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text('No sales today'),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(AppLocalizations.of(context)!.noSalesToday),
                 )
               else
                 ...byPerson.map(

@@ -6,26 +6,28 @@ import '../../../core/database/models/order.dart';
 import '../../../core/database/models/user.dart';
 import '../../auth/application/auth_provider.dart';
 import '../../pos/presentation/receipt_dialog.dart';
+import '../../../core/localization/app_localizations.dart';
 import '../application/order_provider.dart';
 
 class OrderListScreen extends ConsumerWidget {
-  const OrderListScreen({super.key});
+  const OrderListScreen({super.key, this.embedded = false});
+
+  final bool embedded;
 
   Future<void> _voidOrder(BuildContext context, WidgetRef ref, Order order) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Void order?'),
-        content: const Text(
-            'This cancels the order and returns the items to stock. This cannot be undone.'),
+        title: Text(AppLocalizations.of(context)!.voidOrder),
+        content: Text(AppLocalizations.of(context)!.voidOrderContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Keep'),
+            child: Text(AppLocalizations.of(context)!.keep),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Void'),
+            child: Text(AppLocalizations.of(context)!.voidLabel),
           ),
         ],
       ),
@@ -35,7 +37,7 @@ class OrderListScreen extends ConsumerWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
-          ..showSnackBar(const SnackBar(content: Text('Order voided, stock returned')));
+          ..showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.orderVoided)));
       }
     }
   }
@@ -73,9 +75,7 @@ class OrderListScreen extends ConsumerWidget {
     final currentUser = AuthNotifier.currentUser;
     final isAdmin = AuthNotifier.isAdmin;
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Orders')),
-      body: ordersState.when(
+    final body = ordersState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Error: $err')),
         data: (orders) {
@@ -83,7 +83,7 @@ class OrderListScreen extends ConsumerWidget {
               ? orders
               : orders.where((o) => o.salespersonId == currentUser?.userId).toList();
           return visible.isEmpty
-              ? const Center(child: Text('No orders yet'))
+              ? Center(child: Text(AppLocalizations.of(context)!.noOrdersYet))
               : ListView.builder(
                   padding: const EdgeInsets.all(12),
                   itemCount: visible.length,
@@ -99,7 +99,13 @@ class OrderListScreen extends ConsumerWidget {
                   },
                 );
         },
-      ),
+      );
+
+    if (embedded) return body;
+
+    return Scaffold(
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.orders)),
+      body: body,
     );
   }
 }
@@ -158,7 +164,7 @@ class _OrderCard extends StatelessWidget {
               '${order.createdAt.toString().split(' ').first} '
               '${order.createdAt.toString().split(' ').last.split('.').first}',
             ),
-            Text('Sold by: $_salespersonName'),
+            Text('${AppLocalizations.of(context)!.soldBy}: $_salespersonName'),
           ],
         ),
         trailing: Column(
@@ -173,7 +179,7 @@ class _OrderCard extends StatelessWidget {
               ),
             ),
             Chip(
-              label: Text(voided ? 'voided' : order.paymentStatus),
+              label: Text(voided ? AppLocalizations.of(context)!.voided : order.paymentStatus),
               visualDensity: VisualDensity.compact,
               backgroundColor: voided
                   ? Colors.grey.shade300

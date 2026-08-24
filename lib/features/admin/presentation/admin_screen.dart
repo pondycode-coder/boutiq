@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/database/hive_service.dart';
 import '../../../core/sync/sync_service.dart';
 import '../../../core/sync/sync_status.dart';
+import '../../../core/localization/app_localizations.dart';
 import '../../auth/application/auth_provider.dart';
 
 class AdminScreen extends ConsumerWidget {
@@ -13,9 +14,9 @@ class AdminScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (!AuthNotifier.isAdmin) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Admin')),
-        body: const Center(
-          child: Text('Restricted: Admin only'),
+        appBar: AppBar(title: Text(AppLocalizations.of(context)!.admin)),
+        body: Center(
+          child: Text(AppLocalizations.of(context)!.restrictedAdmin),
         ),
       );
     }
@@ -27,7 +28,7 @@ class AdminScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin'),
+        title: Text(AppLocalizations.of(context)!.admin),
         actions: [
           if (currentUser != null)
             Center(
@@ -62,8 +63,8 @@ class AdminScreen extends ConsumerWidget {
                       )
                     : Icon(syncStatus.ok ? Icons.cloud_done : Icons.cloud_off),
               ),
-              title: const Text('Cloud sync',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              title: Text(AppLocalizations.of(context)!.cloudSyncLabel,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
               subtitle: Text(syncStatus.message),
               trailing: TextButton(
                 onPressed: () async {
@@ -72,26 +73,26 @@ class AdminScreen extends ConsumerWidget {
                       .set(const SyncStatus(message: 'Syncing…', syncing: true));
                   await SyncService.syncAll();
                 },
-                child: const Text('Sync now'),
+                child: Text(AppLocalizations.of(context)!.syncNowLabel2),
               ),
             ),
           ),
           _AdminTile(
             icon: Icons.inventory_2,
-            title: 'Products',
-            subtitle: '$productsCount products',
+            title: AppLocalizations.of(context)!.products,
+            subtitle: '$productsCount ${AppLocalizations.of(context)!.productsCount}',
             onTap: () => context.push('/admin/products'),
           ),
           _AdminTile(
             icon: Icons.group,
-            title: 'Salespersons',
-            subtitle: '$usersCount staff members',
+            title: AppLocalizations.of(context)!.salesperson,
+            subtitle: '$usersCount ${AppLocalizations.of(context)!.staffMembers}',
             onTap: () => context.push('/admin/salespersons'),
           ),
           _AdminTile(
             icon: Icons.people,
-            title: 'Clients',
-            subtitle: '$clientsCount clients',
+            title: AppLocalizations.of(context)!.clients,
+            subtitle: '$clientsCount ${AppLocalizations.of(context)!.clientsCount}',
             onTap: () => context.push('/admin/clients'),
           ),
         ],
