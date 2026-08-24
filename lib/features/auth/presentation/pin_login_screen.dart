@@ -35,7 +35,7 @@ class _PinLoginScreenState extends ConsumerState<PinLoginScreen> {
     if (!mounted) return;
     if (user != null) {
       setState(() => _pin = '');
-      context.go('/pos');
+      context.go(AuthNotifier.isAdmin ? '/dashboard' : '/pos');
     } else {
       setState(() => _pin = '');
       ScaffoldMessenger.of(context)
