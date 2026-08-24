@@ -14,6 +14,8 @@ import 'features/pos/presentation/pos_screen.dart';
 import 'features/orders/presentation/order_list_screen.dart';
 import 'features/reports/presentation/reports_screen.dart';
 import 'features/admin/presentation/admin_screen.dart';
+import 'features/admin/presentation/user_manager_screen.dart';
+import 'features/admin/presentation/client_manager_screen.dart';
 import 'features/dashboard/presentation/overview_screen.dart';
 import 'features/dashboard/presentation/products_screen.dart';
 import 'features/dashboard/presentation/staff_screen.dart';
@@ -170,6 +172,19 @@ final _router = GoRouter(
     GoRoute(
       path: '/dashboard/clients',
       builder: (context, state) => const ClientsScreen(),
+    ),
+    // Admin sub-screens (pushed from AdminScreen)
+    GoRoute(
+      path: '/admin/products',
+      builder: (context, state) => const ProductsScreen(),
+    ),
+    GoRoute(
+      path: '/admin/salespersons',
+      builder: (context, state) => const UserManagerScreen(),
+    ),
+    GoRoute(
+      path: '/admin/clients',
+      builder: (context, state) => const ClientManagerScreen(),
     ),
   ],
 );
